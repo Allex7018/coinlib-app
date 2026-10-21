@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Convertor, portofoliu, calculator de investiții și comparator pentru criptomonede, cu date de la CoinGecko.">
+  <title>CryptoLab</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="app">
+  <a href="#acasa" class="brand" aria-label="CryptoLab – Acasă">
+    <!-- Hexagon (bloc din blockchain) cu o moleculă (laborator) în interior -->
+    <svg class="brand-logo" viewBox="0 0 32 32" aria-hidden="true">
+      <defs>
+        <linearGradient id="brandGrad" x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0" stop-color="#FFD66B"/>
+          <stop offset="1" stop-color="#F7931A"/>
+        </linearGradient>
+      </defs>
+      <path d="M16 2.5 27.7 9.25v13.5L16 29.5 4.3 22.75V9.25Z" fill="url(#brandGrad)" stroke="url(#brandGrad)" stroke-width="2.5" stroke-linejoin="round"/>
+      <g stroke="#141414" stroke-width="1.8" stroke-linecap="round">
+        <path d="M16 10.5 11.2 19.3M16 10.5l4.8 8.8M11.2 19.3h9.6"/>
+      </g>
+      <g fill="#141414">
+        <circle cx="16" cy="10.5" r="2.7"/>
+        <circle cx="11.2" cy="19.3" r="2.7"/>
+        <circle cx="20.8" cy="19.3" r="2.7"/>
+      </g>
+      <circle cx="16" cy="10.5" r="1" fill="#FFD66B"/>
+    </svg>
+    <div class="brand-text">
+      <h1 class="brand-name">Crypto<span>Lab</span></h1>
+      <p class="brand-tagline">Prețuri live de la CoinGecko</p>
+    </div>
+  </a>
+
+  <header class="site-header">
+    <form id="currencyForm" class="currency-form">
+      <label for="currency">Monedă</label>
+      <select id="currency" name="currency">
+        <option value="usd">USD ($)</option>
+        <option value="eur">EUR (€)</option>
+        <option value="ron">RON (lei)</option>
+      </select>
+    </form>
+  </header>
+
+  <nav class="sidebar" aria-label="Secțiuni">
+    <a href="#acasa" class="tab active">
+      <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 10.5 12 3l9 7.5"/><path d="M5 9v12h14V9"/><path d="M10 21v-6h4v6"/></svg>
+      <span>Acasă</span>
+    </a>
+    <!-- Ascunse momentan. Ca să le aduci înapoi, scoate comentariul (și atributul hidden de pe secțiunile lor).
+    <a href="#convertor" class="tab">
+      <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 8h15l-4-4"/><path d="M20 16H5l4 4"/></svg>
+      <span>Convertor</span>
+    </a>
+    <a href="#portofoliu" class="tab">
+      <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="6" width="18" height="14" rx="2"/><path d="M3 10h18"/><path d="M7 6V4h10v2"/><circle cx="16.5" cy="15" r="1"/></svg>
+      <span>Portofoliu</span>
+    </a>
+    <a href="#investitie" class="tab">
+      <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 17l6-6 4 4 8-8"/><path d="M15 7h6v6"/></svg>
+      <span>Dacă investeam…</span>
+    </a>
+    -->
+    <a href="#comparator" class="tab">
+      <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 21h18"/><path d="M6 17v-6"/><path d="M12 17V5"/><path d="M18 17v-9"/></svg>
+      <span>Comparator</span>
+    </a>
+  </nav>
+
+  <div class="content">
+  <p id="status" class="status" role="status" aria-live="polite">Se încarcă monedele…</p>
+
+  <main>
+    <!-- 0. Acasă -->
+    <section id="acasa" class="panel active">
+      <h2>Trending</h2>
+      <div class="carousel" id="carousel" tabindex="0" aria-roledescription="carusel" aria-label="Monede trending. Folosește săgețile stânga și dreapta.">
+        <div class="ring" id="coinRing">
+        <article class="coin-card" data-coin="bitcoin">
+          <svg class="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" aria-hidden="true">
+            <circle cx="50" cy="50" r="50" fill="#F7931A"/>
+            <g transform="rotate(14 50 50)" fill="none" stroke="#fff" stroke-width="7" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M38 28 H56 Q66 28 66 38 Q66 48 56 48 H38 M38 48 H59 Q70 48 70 60 Q70 72 59 72 H38 M42 28 V72"/>
+              <path d="M46 20 V28 M55 20 V28 M46 72 V80 M55 72 V80"/>
+            </g>
+          </svg>
+          <div class="textBox">
+            <p class="text head">Bitcoin</p>
+            <span>Criptomonedă</span>
+            <p class="text price">—</p>
+          </div>
+        </article>
+        <article class="coin-card" data-coin="solana">
+          <svg class="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 80" aria-hidden="true">
+            <defs>
+              <linearGradient id="solGrad" x1="0" y1="1" x2="1" y2="0">
+                <stop offset="0" stop-color="#9945FF"/>
+                <stop offset="1" stop-color="#14F195"/>
+              </linearGradient>
+            </defs>
+            <g fill="url(#solGrad)">
+              <polygon points="18,0 100,0 82,18 0,18"/>
+              <polygon points="0,31 82,31 100,49 18,49"/>
+              <polygon points="18,62 100,62 82,80 0,80"/>
+            </g>
+          </svg>
+          <div class="textBox">
+            <p class="text head">Solana</p>
+            <span>Criptomonedă</span>
+            <p class="text price">—</p>
+          </div>
+        </article>
+        <article class="coin-card" data-coin="ripple">
+          <svg class="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 84" aria-hidden="true">
+            <g fill="#e8eaf3">
+              <path d="M5 0 H20 L40 20 Q50 30 60 20 L80 0 H95 L68 27 Q50 45 32 27 Z"/>
+              <path d="M5 84 H20 L40 64 Q50 54 60 64 L80 84 H95 L68 57 Q50 39 32 57 Z"/>
+            </g>
+          </svg>
+          <div class="textBox">
+            <p class="text head">XRP</p>
+            <span>Criptomonedă</span>
+            <p class="text price">—</p>
+          </div>
+        </article>
+        </div>
+        <button type="button" class="carousel-btn prev" id="carouselPrev" aria-label="Moneda anterioară">‹</button>
+        <button type="button" class="carousel-btn next" id="carouselNext" aria-label="Moneda următoare">›</button>
+      </div>
+      <p class="carousel-hint">Trage de carduri sau apasă pe unul ca să-l aduci în față</p>
+
+      <h2>Watchlist</h2>
+      <form id="searchForm" class="search-box" role="search" autocomplete="off">
+        <label for="coinSearch" class="sr-only">Caută o monedă</label>
+        <div class="search-field">
+          <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-4-4"/></svg>
+          <input type="search" id="coinSearch" name="q" placeholder="Adaugă o monedă… (Cardano, Dogecoin)" aria-controls="searchResults">
+        </div>
+        <ul id="searchResults" class="search-results" aria-live="polite"></ul>
+      </form>
+      <ul id="watchlist" class="watch-list" aria-label="Monedele din watchlist"></ul>
+    </section>
+
+    <!-- 1. Convertor -->
+    <section id="convertor" class="panel" hidden>
+      <h2>Convertor crypto ↔ bani</h2>
+      <form id="convertForm" class="card form-grid">
+        <fieldset class="full">
+          <legend>Direcție</legend>
+          <label class="radio"><input type="radio" name="direction" value="toFiat" checked> Crypto → bani</label>
+          <label class="radio"><input type="radio" name="direction" value="toCrypto"> Bani → crypto</label>
+        </fieldset>
+        <div class="field">
+          <label for="convAmount">Sumă</label>
+          <input type="number" id="convAmount" name="amount" min="0" step="any" value="1" required>
+        </div>
+        <div class="field">
+          <label for="convCoin">Criptomonedă</label>
+          <select id="convCoin" name="coin" class="coin-select" required></select>
+        </div>
+        <button type="submit" class="full">Convertește</button>
+      </form>
+      <output id="convResult" class="result" for="convAmount convCoin"></output>
+    </section>
+
+    <!-- 2. Portofoliu -->
+    <section id="portofoliu" class="panel" hidden>
+      <h2>Portofoliul meu</h2>
+      <form id="portfolioForm" class="card form-grid">
+        <div class="field">
+          <label for="pfCoin">Criptomonedă</label>
+          <select id="pfCoin" name="coin" class="coin-select" required></select>
+        </div>
+        <div class="field">
+          <label for="pfQty">Cantitate</label>
+          <input type="number" id="pfQty" name="qty" min="0.00000001" step="any" placeholder="ex. 0.5" required>
+        </div>
+        <button type="submit" class="full">Adaugă în portofoliu</button>
+      </form>
+      <div class="card">
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th scope="col">Monedă</th>
+                <th scope="col">Cantitate</th>
+                <th scope="col">Preț</th>
+                <th scope="col">Valoare</th>
+                <th scope="col">24h</th>
+                <th scope="col"><span class="sr-only">Acțiuni</span></th>
+              </tr>
+            </thead>
+            <tbody id="pfBody"></tbody>
+          </table>
+        </div>
+        <p id="pfTotal" class="total"></p>
+      </div>
+    </section>
+
+    <!-- 4. Dacă investeam -->
+    <section id="investitie" class="panel" hidden>
+      <h2>Dacă investeam X atunci…</h2>
+      <form id="whatIfForm" class="card form-grid">
+        <div class="field">
+          <label for="wiAmount">Sumă investită</label>
+          <input type="number" id="wiAmount" name="amount" min="1" step="any" value="100" required>
+        </div>
+        <div class="field">
+          <label for="wiCoin">Criptomonedă</label>
+          <select id="wiCoin" name="coin" class="coin-select" required></select>
+        </div>
+        <div class="field full">
+          <label for="wiDate">Data investiției</label>
+          <input type="date" id="wiDate" name="date" required>
+          <small>Maxim un an în urmă (limita API-ului gratuit).</small>
+        </div>
+        <button type="submit" class="full">Calculează</button>
+      </form>
+      <output id="wiResult" class="result" for="wiAmount wiCoin wiDate"></output>
+    </section>
+
+    <!-- 5. Comparator -->
+    <section id="comparator" class="panel">
+      <h2>Comparator</h2>
+      <form id="compareForm" class="card form-grid">
+        <div class="field">
+          <label for="cmp1">Moneda 1</label>
+          <select id="cmp1" name="coin1" class="coin-select" required></select>
+        </div>
+        <div class="field">
+          <label for="cmp2">Moneda 2</label>
+          <select id="cmp2" name="coin2" class="coin-select" required></select>
+        </div>
+        <button type="submit" class="full">Compară</button>
+      </form>
+      <div id="cmpResult" class="compare-grid"></div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <p>Date: <a href="https://www.coingecko.com/en/api" target="_blank" rel="noopener">CoinGecko API</a> · Actualizat: <time id="updated">—</time></p>
+  </footer>
+  </div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>

@@ -1,0 +1,494 @@
+:root {
+  --bg: #000000;
+  --card: #111111;
+  --border: #262626;
+  --text: #ededed;
+  --muted: #a1a1a1;
+  --accent: #f7b733;
+  --up: #2ecc71;
+  --down: #ff5c5c;
+  --radius: 12px;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.5;
+}
+
+a { color: var(--accent); }
+
+.sr-only {
+  position: absolute;
+  width: 1px; height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+}
+
+/* Structura paginii: logo-ul stă deasupra meniului, în aceeași coloană din stânga */
+.app {
+  display: grid;
+  grid-template-columns: 220px minmax(0, 1fr);
+  grid-template-rows: auto minmax(0, 1fr);
+  grid-template-areas:
+    "brand  header"
+    "nav    content";
+}
+.brand { grid-area: brand; }
+.site-header { grid-area: header; }
+.sidebar { grid-area: nav; }
+.content { grid-area: content; }
+
+/* Pe ecrane mari, logo-ul, header-ul și meniul stau pe loc și se derulează doar conținutul din dreapta */
+@media (min-width: 641px) {
+  body { overflow: hidden; }
+  .app { height: 100vh; height: 100dvh; }
+  .content { overflow-y: auto; }
+  .sidebar { overflow-y: auto; }
+}
+
+/* Logo + nume */
+.brand {
+  display: flex;
+  align-items: center;
+  gap: .7rem;
+  padding: 1rem 1.1rem;
+  border-right: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+  color: inherit;
+  text-decoration: none;
+}
+.brand-logo { width: 36px; height: 36px; flex-shrink: 0; filter: drop-shadow(0 2px 8px rgba(247, 147, 26, .35)); transition: transform .3s ease; }
+.brand:hover .brand-logo { transform: rotate(-8deg) scale(1.05); }
+.brand-name span { color: var(--accent); }
+.brand-text { min-width: 0; }
+.brand-name { margin: 0; font-size: 1.2rem; line-height: 1.2; color: var(--text); letter-spacing: -.01em; }
+.brand-tagline { margin: 0; color: var(--muted); font-size: .72rem; white-space: nowrap; }
+
+/* Header: doar selectorul de monedă, în dreapta */
+.site-header {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 1rem;
+  padding: .75rem 1.5rem;
+  border-bottom: 1px solid var(--border);
+}
+.currency-form { display: flex; align-items: center; gap: .5rem; }
+.currency-form label { color: var(--muted); font-size: .9rem; }
+.currency-form select { width: auto; }
+
+.sidebar {
+  display: flex;
+  flex-direction: column;
+  gap: .25rem;
+  padding: 1rem .75rem;
+  border-right: 1px solid var(--border);
+}
+.tab {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: .75rem;
+  padding: .65rem .85rem;
+  border-radius: 8px;
+  color: var(--muted);
+  text-decoration: none;
+  white-space: nowrap;
+  transition: background .15s, color .15s;
+}
+.tab:hover { color: var(--text); background: rgba(255, 255, 255, .05); }
+.tab.active { color: var(--text); background: rgba(255, 255, 255, .1); font-weight: 600; }
+.tab.active::before {
+  content: "";
+  position: absolute;
+  left: -.75rem;
+  top: 20%;
+  bottom: 20%;
+  width: 3px;
+  border-radius: 0 3px 3px 0;
+  background: var(--text);
+}
+.icon {
+  width: 20px;
+  height: 20px;
+  flex-shrink: 0;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.8;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+/* Layout */
+main { max-width: 1100px; margin: 0 auto; padding: 0 1.5rem 2rem; }
+.panel { display: none; }
+.panel.active { display: block; }
+h2 { margin: 1.5rem 0 1rem; }
+
+.card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 1.25rem;
+  margin-bottom: 1rem;
+}
+
+.status { max-width: 1100px; margin: .75rem auto 0; padding: 0 1.5rem; color: var(--muted); min-height: 1.5em; }
+.status.error { color: var(--down); }
+
+/* Forms */
+.form-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1rem;
+}
+.full { grid-column: 1 / -1; }
+.field { display: flex; flex-direction: column; gap: .35rem; }
+.field small { color: var(--muted); }
+
+fieldset { border: 1px solid var(--border); border-radius: 8px; display: flex; flex-wrap: wrap; gap: 1rem; }
+legend { color: var(--muted); padding: 0 .3rem; }
+.radio { display: flex; align-items: center; gap: .4rem; cursor: pointer; }
+
+input, select, button {
+  font: inherit;
+  padding: .65rem .8rem;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+  background: var(--bg);
+  color: var(--text);
+  width: 100%;
+}
+input:focus, select:focus { outline: 2px solid var(--accent); outline-offset: 1px; }
+input[type="radio"] { width: auto; accent-color: var(--accent); }
+input[type="date"] { color-scheme: dark; }
+
+button {
+  background: var(--accent);
+  color: #111;
+  border: none;
+  font-weight: 700;
+  cursor: pointer;
+}
+button:hover { filter: brightness(1.08); }
+button:disabled { opacity: .6; cursor: wait; }
+button.remove { background: transparent; color: var(--down); border: 1px solid var(--down); padding: .3rem .6rem; width: auto; }
+
+/* Results */
+.result { display: block; font-size: 1.25rem; }
+.result:empty { display: none; }
+.result .big { font-size: 1.8rem; font-weight: 700; color: var(--accent); display: block; }
+.up { color: var(--up); }
+.down { color: var(--down); }
+
+/* Table */
+.table-wrap { overflow-x: auto; }
+table { width: 100%; border-collapse: collapse; }
+th, td { padding: .6rem; text-align: left; border-bottom: 1px solid var(--border); white-space: nowrap; }
+th { color: var(--muted); font-weight: 500; font-size: .9rem; }
+.coin-cell { display: flex; align-items: center; gap: .5rem; }
+.coin-cell img { width: 22px; height: 22px; }
+.total { font-size: 1.2rem; margin: 1rem 0 0; }
+.empty { color: var(--muted); text-align: center; }
+
+/* Comparator */
+/* Cu 2 monede, secțiunea e îngustă și centrată, ca fiecare card să aibă cam aceeași mărime ca atunci când erau 3 */
+#comparator { max-width: 700px; margin: 0 auto; }
+.compare-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1rem; }
+.compare-card h3 { display: flex; align-items: center; gap: .5rem; margin: 0 0 .75rem; }
+.compare-card img { width: 32px; height: 32px; }
+.compare-card { margin-bottom: 0; }
+.compare-card h3 { overflow-wrap: anywhere; }
+.compare-card dl { margin: 0; display: grid; grid-template-columns: auto minmax(0, 1fr); gap: .35rem 1rem; }
+.compare-card dt { color: var(--muted); white-space: nowrap; }
+.compare-card dt abbr { text-decoration: none; }
+.compare-card dd { margin: 0; text-align: right; font-weight: 600; overflow-wrap: anywhere; font-variant-numeric: tabular-nums; }
+.best { outline: 2px solid var(--up); }
+
+/* Acasă – carusel trending: cardurile stau pe un oval, poziționate din JS */
+.carousel {
+  position: relative;
+  height: 380px;
+  overflow: hidden;
+  touch-action: pan-y; /* pe telefon pagina se poate derula în continuare pe verticală */
+  user-select: none;
+  cursor: grab;
+  border-radius: var(--radius);
+}
+.carousel.dragging { cursor: grabbing; }
+.carousel:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.ring { position: absolute; inset: 0; }
+.ring > .coin-card { position: absolute; left: 50%; top: 56%; will-change: transform, opacity; }
+.ring img { pointer-events: none; -webkit-user-drag: none; }
+.coin-logo { border-radius: 50%; }
+
+.carousel-btn {
+  position: absolute;
+  top: 50%;
+  z-index: 200;
+  width: 44px;
+  height: 44px;
+  padding: 0;
+  border-radius: 50%;
+  transform: translateY(-50%);
+  background: rgba(255, 255, 255, .08);
+  color: var(--text);
+  font-size: 1.6rem;
+  font-weight: 400;
+  line-height: 1;
+}
+.carousel-btn:hover { background: rgba(255, 255, 255, .16); filter: none; }
+.carousel-btn.prev { left: .5rem; }
+.carousel-btn.next { right: .5rem; }
+.carousel-hint { margin: .25rem 0 0; text-align: center; color: var(--muted); font-size: .85rem; }
+
+/* Card: logo-ul urcă pe cardul din față și dedesubt apar numele și prețul */
+.coin-card {
+  --glow: rgba(255, 255, 255, .18); /* culoarea luminii la hover, suprascrisă per monedă */
+  position: relative;
+  overflow: hidden;
+  width: 195px;
+  height: 285px;
+  background: #161616;
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  transition: border-color .3s ease, box-shadow .3s ease;
+}
+.coin-card[data-coin="bitcoin"] { --glow: rgba(247, 147, 26, .35); }
+.coin-card[data-coin="solana"] { --glow: rgba(153, 69, 255, .35); }
+.coin-card[data-coin="ripple"] { --glow: rgba(255, 255, 255, .22); }
+.coin-card[data-coin="ethereum"] { --glow: rgba(98, 126, 234, .4); }
+.coin-card[data-coin="zcash"] { --glow: rgba(244, 183, 40, .35); }
+.coin-card[data-coin="near"] { --glow: rgba(255, 255, 255, .22); }
+.coin-card[data-coin="dogecoin"] { --glow: rgba(194, 166, 51, .4); }
+.coin-card[data-coin="injective-protocol"] { --glow: rgba(0, 130, 250, .4); }
+.coin-card[data-coin="sui"] { --glow: rgba(77, 162, 255, .4); }
+.coin-card[data-coin="monero"] { --glow: rgba(255, 102, 0, .35); }
+.coin-card[data-coin="litecoin"] { --glow: rgba(52, 93, 157, .45); }
+
+/* Lumina din spatele logo-ului */
+.coin-card::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at 50% 32%, var(--glow), transparent 65%);
+  opacity: 0;
+  transition: opacity .3s ease;
+}
+.coin-card .img {
+  height: 30%;
+  position: absolute;
+  transition: transform .35s ease;
+  z-index: 1;
+}
+.coin-card .textBox {
+  opacity: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  margin-top: 110px;
+  transform: translateY(12px);
+  transition: opacity .3s ease, transform .3s ease;
+  z-index: 2;
+  text-align: center;
+}
+.coin-card .textBox p { margin: 0; }
+.coin-card .text { font-weight: bold; }
+.coin-card .head { font-size: 18px; }
+.coin-card .textBox .price { font-size: 20px; margin-top: 6px; }
+.coin-card .textBox > span { font-size: 12px; color: var(--muted); }
+
+.coin-card.is-front {
+  border-color: #3a3a3a;
+  box-shadow: 0 18px 40px -18px var(--glow);
+}
+.coin-card.is-front::before { opacity: 1; }
+.coin-card.is-front .img { transform: translateY(-58px) scale(.72); }
+.coin-card.is-front .textBox { opacity: 1; transform: translateY(0); }
+.coin-card:not(.is-front):hover { border-color: #3a3a3a; cursor: pointer; }
+
+/* Watchlist – listă */
+.watch-list {
+  list-style: none;
+  margin: 0 auto;
+  padding: 0;
+  max-width: 900px;
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  overflow: hidden;
+}
+.watch-row {
+  display: grid;
+  grid-template-columns: minmax(150px, 1.5fr) minmax(110px, 1fr) minmax(90px, .9fr) minmax(60px, 1fr) minmax(90px, .9fr) 36px;
+  align-items: center;
+  gap: 1rem;
+  padding: .85rem 1.25rem;
+  border-top: 1px solid var(--border);
+  font-variant-numeric: tabular-nums;
+  transition: background .15s;
+}
+.watch-row:first-child { border-top: none; }
+.watch-row:not(.watch-head):hover { background: rgba(255, 255, 255, .03); }
+.watch-head { padding-top: .6rem; padding-bottom: .6rem; color: var(--muted); font-size: .8rem; text-transform: uppercase; letter-spacing: .04em; }
+.watch-head span:nth-child(5) { text-align: right; }
+
+.watch-coin { display: flex; align-items: center; gap: .75rem; min-width: 0; }
+.watch-coin img { width: 32px; height: 32px; border-radius: 50%; flex-shrink: 0; }
+.watch-coin > span { display: flex; flex-direction: column; min-width: 0; }
+.watch-coin strong { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.watch-coin small, .watch-label { color: var(--muted); font-size: .8rem; }
+.watch-price { display: flex; flex-direction: column; }
+.watch-price small { font-size: .8rem; }
+.watch-high { text-align: right; }
+.watch-label { display: none; }
+
+.range-bar { position: relative; height: 4px; border-radius: 2px; background: linear-gradient(90deg, var(--down), #555 50%, var(--up)); }
+.range-dot {
+  position: absolute;
+  top: 50%;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: var(--text);
+  border: 2px solid var(--card);
+  transform: translate(-50%, -50%);
+}
+
+.watch-remove {
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  border-radius: 50%;
+  background: transparent;
+  color: var(--muted);
+  font-weight: 400;
+}
+.watch-remove:hover { background: rgba(255, 92, 92, .15); color: var(--down); filter: none; }
+.watch-list > .empty { padding: 1.25rem; }
+
+/* Căutare watchlist */
+.search-box { display: flex; flex-direction: column; gap: .5rem; max-width: 520px; margin: 0 auto 1rem; }
+.search-field { position: relative; }
+.search-field .icon { position: absolute; left: 1rem; top: 50%; transform: translateY(-50%); color: var(--muted); pointer-events: none; }
+.search-field input {
+  padding: .8rem 1rem .8rem 2.8rem;
+  border-radius: 999px;
+  background: var(--card);
+}
+.search-field input:focus { outline: none; border-color: var(--muted); }
+.search-field:focus-within .icon { color: var(--text); }
+.search-results {
+  list-style: none;
+  margin: 0;
+  padding: .35rem;
+  display: flex;
+  flex-direction: column;
+  gap: .25rem;
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+}
+.search-results:empty { display: none; }
+.search-results button {
+  display: flex;
+  align-items: center;
+  gap: .6rem;
+  background: transparent;
+  color: var(--text);
+  font-weight: 400;
+  text-align: left;
+}
+.search-results button:hover:not(:disabled) { background: rgba(255, 255, 255, .06); filter: none; }
+.search-results button:disabled { cursor: default; opacity: .5; }
+.search-results img { width: 24px; height: 24px; border-radius: 50%; }
+.search-results .name { flex: 1; }
+.search-results small { color: var(--muted); }
+.search-results .add { color: var(--muted); font-size: .85rem; }
+
+@media (prefers-reduced-motion: reduce) {
+  .coin-card, .coin-card *, .coin-card::before { transition: none !important; }
+}
+
+.site-footer { text-align: center; color: var(--muted); padding: 1.5rem; font-size: .9rem; }
+
+/* Responsive */
+@media (max-width: 640px) {
+  /* Sus: logo în stânga, monedă în dreapta; meniul trece jos */
+  .app {
+    grid-template-columns: minmax(0, 1fr) auto;
+    grid-template-rows: auto auto;
+    grid-template-areas:
+      "brand   header"
+      "content content";
+  }
+  .brand { border-right: none; padding: .75rem 1rem; }
+  .brand-tagline { display: none; }
+  .site-header { padding: .75rem 1rem; }
+  .sidebar { grid-area: auto; }
+  main, .status { padding-left: 1rem; padding-right: 1rem; }
+  .form-grid { grid-template-columns: 1fr; }
+  .result .big { font-size: 1.4rem; }
+  th, td { padding: .5rem .4rem; font-size: .9rem; }
+
+  /* Sidebar-ul devine bară de navigare jos */
+  body { padding-bottom: 72px; }
+  .sidebar {
+    position: fixed;
+    top: auto;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 10;
+    height: auto;
+    flex-direction: row;
+    justify-content: space-around;
+    gap: 0;
+    padding: .35rem .25rem;
+    border-right: none;
+    border-top: 1px solid var(--border);
+    background: var(--bg);
+  }
+  .tab {
+    flex: 1;
+    flex-direction: column;
+    gap: .2rem;
+    padding: .4rem .2rem;
+    font-size: .7rem;
+    text-align: center;
+    white-space: normal;
+    line-height: 1.15;
+  }
+  /* Watchlist: fiecare rând pe două linii (monedă + preț, apoi min – bară – max) */
+  .watch-head { display: none; }
+  .watch-row {
+    grid-template-columns: auto 1fr auto 32px;
+    grid-template-areas:
+      "coin coin price remove"
+      "low  bar  high  high";
+    gap: .6rem .75rem;
+    padding: .85rem 1rem;
+  }
+  .watch-coin { grid-area: coin; }
+  .watch-price { grid-area: price; text-align: right; }
+  .watch-low { grid-area: low; }
+  .range-bar { grid-area: bar; }
+  .watch-high { grid-area: high; }
+  .watch-remove { grid-area: remove; }
+  .watch-low, .watch-high { font-size: .85rem; display: flex; flex-direction: column; }
+  .watch-label { display: block; font-size: .7rem; }
+  .watch-head + .watch-row { border-top: none; }
+
+  .tab.active::before { left: 25%; right: 25%; top: -.35rem; bottom: auto; width: auto; height: 3px; border-radius: 0 0 3px 3px; }
+}
