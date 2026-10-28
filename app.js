@@ -1,14 +1,10 @@
 // CryptoLab – convertor, portofoliu, „dacă investeam”, comparator (API CoinGecko, fără cheie)
 const API = "https://api.coingecko.com/api/v3";
 const CACHE_MS = 60 * 1000; // API-ul gratuit are limită de cereri, așa că refolosim datele 1 minut
-// CoinGecko nu are RON: luăm prețurile în USD și le convertim cu cursul BCE de la Frankfurter
-const FX_API = "https://api.frankfurter.dev/v1";
-const PRICE_FIELDS = ["current_price", "market_cap", "total_volume", "high_24h", "low_24h", "ath"];
 
 const $ = (sel) => document.querySelector(sel);
 const marketCache = {}; // { usd: { time, coins: [...] } }
 let coins = [];         // lista curentă de monede (top 100) în moneda aleasă
-let fxRate = 1;         // cursul USD→RON folosit pentru `coins` (1 pentru celelalte monede)
 
 // ---------- Utilitare ----------
 function currency() {
@@ -65,34 +61,17 @@ async function getJSON(url) {
 }
 
 // ---------- Date din API ----------
-async function usdToRon(date = "latest") {
-  const data = await getJSON(`${FX_API}/${date}?base=USD&symbols=RON`);
-  return data.rates.RON;
-}
-
-function convertPrices(coin, rate) {
-  const copy = { ...coin };
-  PRICE_FIELDS.forEach((field) => {
-    if (copy[field] != null) copy[field] *= rate;
-  });
-  return copy;
-}
-
 async function loadMarkets(force = false) {
   const cur = currency();
   const cached = marketCache[cur];
   if (!force && cached && Date.now() - cached.time < CACHE_MS) {
     coins = cached.coins;
-    fxRate = cached.rate;
     return coins;
   }
   setStatus("Se încarcă prețurile…");
-  const apiCur = cur === "ron" ? "usd" : cur;
-  const url = `${API}/coins/markets?vs_currency=${apiCur}&order=market_cap_desc&per_page=100&page=1&price_change_percentage=24h,7d`;
+  const url = `${API}/coins/markets?vs_currency=${cur}&order=market_cap_desc&per_page=100&page=1&price_change_percentage=24h,7d`;
   coins = await getJSON(url);
-  fxRate = cur === "ron" ? await usdToRon() : 1;
-  if (fxRate !== 1) coins = coins.map((c) => convertPrices(c, fxRate));
-  marketCache[cur] = { time: Date.now(), coins, rate: fxRate };
+  marketCache[cur] = { time: Date.now(), coins };
   $("#updated").textContent = new Date().toLocaleTimeString("ro-RO");
   $("#updated").dateTime = new Date().toISOString();
   setStatus("");
@@ -140,11 +119,9 @@ async function loadExtraPrices() {
   const missing = ids.filter((id) => !findCoin(id));
   extraCoins = {};
   if (!missing.length) return;
-  const cur = currency();
-  const apiCur = cur === "ron" ? "usd" : cur;
   try {
-    const data = await getJSON(`${API}/coins/markets?vs_currency=${apiCur}&ids=${missing.join(",")}`);
-    data.forEach((c) => (extraCoins[c.id] = convertPrices(c, fxRate)));
+    const data = await getJSON(`${API}/coins/markets?vs_currency=${currency()}&ids=${missing.join(",")}`);
+    data.forEach((c) => (extraCoins[c.id] = c));
   } catch (err) {
     setStatus(err.message, true);
   }
@@ -518,11 +495,7 @@ async function whatIf(event) {
   out.innerHTML = "";
   try {
     const data = await getJSON(`${API}/coins/${coin.id}/history?date=${d}-${m}-${y}&localization=false`);
-    let oldPrice = data.market_data?.current_price?.[cur];
-    if (cur === "ron") {
-      const usdPrice = data.market_data?.current_price?.usd;
-      oldPrice = usdPrice && usdPrice * (await usdToRon(`${y}-${m}-${d}`));
-    }
+    const oldPrice = data.market_data?.current_price?.[cur];
     if (!oldPrice) throw new Error("Nu există preț pentru data aleasă.");
 
     const units = amount / oldPrice;
@@ -604,7 +577,7 @@ async function refreshAll(force = false) {
 function init() {
   try {
     const saved = localStorage.getItem("currency");
-    if (saved) $("#currency").value = saved;
+    if (saved === "usd" || saved === "eur") $("#currency").value = saved;
   } catch {}
 
   setupDateLimits();
